@@ -20,7 +20,7 @@ function Main({data, onEditAvatar, onEditProfile, onAddPlace, userName, userDesc
       <section className="elements">
         <>
           {
-              data.map((card, id) => <Card key={id} card={card} onCardClick={onCardClick}/>)          
+              data.map((card) => <Card key={card.id} card={card} onCardClick={onCardClick}/>)          
           }
         </>
       </section>

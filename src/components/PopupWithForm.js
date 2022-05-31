@@ -1,8 +1,8 @@
 import React from "react";
 
-function PopupWithForm({name, formTitle, buttonText, children, isOpen, onClose}) {
+function PopupWithForm({name, formTitle, buttonText="Сохранить", children, isOpen, onClose}) {
   return (
-    <div className={`popup-${name} popup ${isOpen ? "popup_is_opened" : ''}`}>
+    <div className={`popup-${name} popup ${isOpen && "popup_is_opened"}`}>
       <div className={`popup-${name}__container popup-container`}>
         <button type="button" className={`popup-${name}__close popup-close`} onClick={onClose}></button>
         <form name={`${name}-form`} className={`popup-${name}__form popup__form`} noValidate>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -35,12 +35,6 @@ function App() {
   const onCardClick = (cards) => setSelectCard(cards);
 
   useEffect(() => {
-    api.getUser()
-    .then(res => setMe(res))
-    .catch(err => alert(err));
-  }, []);
-
-  useEffect(() => {
     api.getAllCards()
     .then(res => {
       setCards(res.map((item) => ({
@@ -50,6 +44,10 @@ function App() {
         likes: item.likes.length
       })))
     })
+    .catch(err => alert(err));
+
+    api.getUser()
+    .then(res => setMe(res))
     .catch(err => alert(err));
   }, []);
 
@@ -71,7 +69,7 @@ function App() {
 
         </div>
 
-        <PopupWithForm name={"edit"} formTitle={"Редактировать профиль"} buttonText={"Сохранить"} isOpen={isEditProfilePopupOpen} onClose={handleCloseButton}>
+        <PopupWithForm name={"edit"} formTitle={"Редактировать профиль"} isOpen={isEditProfilePopupOpen} onClose={handleCloseButton}>
           <section className="popup__section">
             <input id="name-input" type="text" name="name" className="popup-edit__item popup-item popup-edit__item_el_name" placeholder="Имя"  required minLength="2" maxLength="40" autoComplete="off"/>
             <span className="name-input-error popup__input-error"></span>
@@ -82,7 +80,7 @@ function App() {
           </section>
         </PopupWithForm>
 
-        <PopupWithForm name={"add"} formTitle={"Новое место"} buttonText={"Сохранить"} isOpen={isAddPlacePopupOpen} onClose={handleCloseButton}>
+        <PopupWithForm name={"add"} formTitle={"Новое место"} isOpen={isAddPlacePopupOpen} onClose={handleCloseButton}>
           <section className="popup__section">
             <input type="text" name="name" className="popup-add__item popup-item popup-add__item_el_name" placeholder="Название"  minLength="2" maxLength="30" autoComplete="off" required/>
             <span className="name-input-error popup__input-error"></span>
@@ -93,7 +91,7 @@ function App() {
           </section>
         </PopupWithForm>
 
-        <PopupWithForm name={"update"} formTitle={"Обновить аватар"} buttonText={"Сохранить"} isOpen={isEditAvatarPopupOpen} onClose={handleCloseButton}>
+        <PopupWithForm name={"update"} formTitle={"Обновить аватар"} isOpen={isEditAvatarPopupOpen} onClose={handleCloseButton}>
           <section className="popup__section">
             <input type="url" name="link" className="popup-update__item popup-item popup-update__item" placeholder="Ссылка на новый аватар"  autoComplete="off" required />
             <span className="descr-input-error popup__input-error"></span>
