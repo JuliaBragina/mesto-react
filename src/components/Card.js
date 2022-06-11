@@ -1,16 +1,25 @@
 import React from 'react';
-import deleteButton from '../images/delete-button.svg';
+import { CurrenUserContext } from '../contexts/CurrentUserContext';
 
-function Card({card, onCardClick}) {
+
+function Card({card, onCardClick, onCardLike, onCardDelete}) {
+  const currenUser = React.useContext(CurrenUserContext);
+  const isOwn = card.owner._id === currenUser._id;
+  const isLiked = card.likes.some(i => i._id === currenUser._id);
+
   return (
     <div className="elements__item">
-      <img className="elements__img" style={{ backgroundImage: `url(${card.link})`}} onClick={_ => onCardClick(card)}/>
-      <button className='elements__delete-button' src={deleteButton}></button>
+      <img className="elements__img" style={{ backgroundImage: `url(${card.link})`}} onClick={_ => onCardClick(card)}/>  
+      <>
+        {
+          isOwn && <button type="button" className='elements__delete-button' onClick={_ => onCardDelete(card._id)}></button>
+        }
+      </>
       <div className="elements__flex-container">
       <h2 className="elements__title">{card.name}</h2>
         <section className = "elements__section">
-          <button type="button" aria-label = "Нравится" className="elements__like-button"></button>
-          <p className="elements__likes-quantity" >{card.likes}</p>
+          <button type="button" aria-label = "Нравится" className={`elements__like-button ${isLiked && 'elements__like-button_is-liked'}`} onClick={_ => onCardLike(card, currenUser)}></button>
+          <p className="elements__likes-quantity" >{card.likes.length}</p>
         </section>
       </div>
     </div>
