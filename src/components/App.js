@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -18,7 +18,6 @@ function App() {
   const [cards, setCards] = useState([]);
   const [selectCard, setSelectCard] = useState(null);
   const [currenUser, setCurrentUser] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     api.getAllCards()
@@ -50,36 +49,22 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    setIsLoading(true);
     api.setUserInfo(data)
-    .then((newUser) => {
-      setCurrentUser(newUser); 
-      handleCloseButton();
-    })
-    .catch(err => alert(err))
-    .finally(() => setIsLoading(false));
+    .then((newUser) => setCurrentUser(newUser));
+    handleCloseButton();
   }
 
   function handleUpdateAvatar(data) {
-    setIsLoading(true);
+    console.log(data);
     api.setUserAvatar(data)
-    .then((newAvatar) => {
-      setCurrentUser(newAvatar);
-      handleCloseButton();
-    })
-    .catch(err => alert(err))
-    .finally(() => setIsLoading(false));
+    .then((newAvatar) => setCurrentUser(newAvatar));
+    handleCloseButton();
   }
 
   function handleAddPlace(data) {
-    setIsLoading(true);
     api.addCards(data)
-    .then((newCard) => {
-      setCards([newCard, ...cards]);
-      handleCloseButton();
-    })
-    .catch(err => alert(err))
-    .finally(() => setIsLoading(false));
+    .then((newCard) => setCards([newCard, ...cards]));
+    handleCloseButton();
   }
 
   function handleCardLike(data, currenUser) {
@@ -87,22 +72,21 @@ function App() {
     api.changeLikeCardStatus(data._id, !isLiked)
     .then((newCard) => {
       setCards((state) => state.map((c) => c._id === data._id ? newCard : c));
-    })
-    .catch(err => alert(err));
+    });
   } 
 
   function handleCardDelete(idCard) {
     api.deletCard(idCard)
     .then(() => {
       setCards(cards => cards.filter(c => c._id != idCard));
-    })
-    .catch(err => alert(err));
+    });
   }
 
   return (
     <CurrenUserContext.Provider value={currenUser}>
       <div className="App">
           <div className="page">
+
             <Header />
             <Main 
               data={cards} 
@@ -113,30 +97,16 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete} />
             <Footer />
+
           </div>
 
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={handleCloseButton}
-            onUpdateUser={handleUpdateUser}
-            onLoading={isLoading} />
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handleCloseButton} onUpdateUser={handleUpdateUser} />
 
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={handleCloseButton}
-            onUpdateAvatar={handleUpdateAvatar}
-            onLoading={isLoading} />
+          <EditAvatarPopup  isOpen={isEditAvatarPopupOpen} onClose={handleCloseButton} onUpdateAvatar={handleUpdateAvatar}/>
 
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={handleCloseButton}
-            onAddCard={handleAddPlace}
-            onLoading={isLoading} />
+          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handleCloseButton} onAddCard={handleAddPlace}/>
 
-          <PopupWithForm 
-            name={"delete"}
-            formTitle={"Вы уверенны?"}
-            buttonText={"Да"} />
+          <PopupWithForm name={"delete"} formTitle={"Вы уверенны?"} buttonText={"Да"} />
 
           <ImagePopup card={selectCard} onClose={handleCloseButton}/>
       </div>
